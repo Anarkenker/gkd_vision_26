@@ -1,0 +1,89 @@
+#####-----神经网络参数-----#####
+yolo_name: yolov5
+classify_model: assets/tiny_resnet.onnx
+yolo11_model_path: assets/yolo11.xml
+yolov8_model_path: assets/yolov8.xml
+yolov5_model_path: assets/yolov5.xml
+device: GPU
+min_confidence: 0.8
+use_traditional: true
+
+#####-----ROI-----#####
+roi: 
+  x: 420
+  y: 50
+  width: 600
+  height: 600
+
+use_roi: false
+
+#####-----传统方法参数-----#####
+threshold: 150
+max_angle_error: 45 # degree
+min_lightbar_ratio: 1.5
+max_lightbar_ratio: 20
+min_lightbar_length: 8
+min_armor_ratio: 1
+max_armor_ratio: 5
+max_side_ratio: 1.5
+max_rectangular_error: 25 # degree
+
+#####-----tracker参数-----#####
+min_detect_count: 1
+max_temp_lost_count: 15
+outpost_max_temp_lost_count: 75
+process_v1: 120
+process_v2: 100
+outpost_process_v1: 10
+outpost_process_v2: 0.1
+
+#####-----aimer参数-----#####
+yaw_offset: -1 # degree -2.5
+pitch_offset: -1 # degree 2
+comming_angle: 55 # degree
+leaving_angle: 20 # degree
+decision_speed: 7 # rad/s
+high_speed_delay_time: 0.0 # s
+low_speed_delay_time: 0.0 # s planner use this value
+
+#####-----shooter参数-----#####
+first_tolerance: 3 # 近距离射击容差，degree
+second_tolerance: 2 # 远距离射击容差，degree
+judge_distance: 2 #距离判断阈值
+auto_fire: true # 是否由自瞄控制射击
+
+camera_name: "hikrobot"
+exposure_ms: 2
+gain: 16.9
+vid_pid: "2bdf:0001"
+
+#  1  0  0
+#  0  1  0
+#  0  0  1
+R_gimbal2imubody: [1, 0, 0, 0, 1, 0, 0, 0, 1]
+
+# 重投影误差: 0.0927px
+camera_matrix: [1780.9481867129432, 0, 747.37865917844886, 0, 1780.3988121220884, 606.52660668277179, 0, 0, 1]
+distort_coeffs: [-0.12545568772566174, 0.11705061936054625, -0.00025855083876730504, 0.00023645389886868385, 0]
+
+
+R_camera2gimbal: [0, 0, 1, -1, 0, 0, 0, -1, 0]
+t_camera2gimbal: [0.075517325957791413, 0.06625338092767802, 0.041359710880185793]
+
+#####-----手眼测试参数-----#####
+handeye_test:
+  height: 0.6
+  grid_num: 6
+  grid_size: 0.1
+  delay: 0
+
+#####-----planner-----#####
+fire_thresh: 0.0015
+
+max_yaw_acc: 0.5
+Q_yaw: [1, 1]
+R_yaw: [1e8]
+
+max_pitch_acc: 100
+Q_pitch: [9e6, 0]
+R_pitch: [1]
