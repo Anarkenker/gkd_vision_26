@@ -39,7 +39,8 @@ int main(int argc, char * argv[])
 
   auto_aim::YOLO detector(config_path, false);
   auto_aim::Solver solver(config_path);
-  auto_aim::Tracker tracker(config_path, solver);
+  auto_aim::Color enemy_color = gkdcontrol.color_at(std::chrono::steady_clock::now());
+  auto_aim::Tracker tracker(config_path, solver, enemy_color);
   auto_aim::Planner planner(config_path);
 
   cv::Mat img;
@@ -49,6 +50,7 @@ int main(int argc, char * argv[])
   while (!exiter.exit()) {
     camera.read(img, t);
     q = gkdcontrol.imu_at(t - 1ms);
+    enemy_color = gkdcontrol.color_at(t - 1ms);
 
     // recorder.record(img, q, t);
 
