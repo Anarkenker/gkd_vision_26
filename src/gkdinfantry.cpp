@@ -52,7 +52,6 @@ int main(int argc, char * argv[])
   while (!exiter.exit()) {
     camera.read(img, t);
     q = gkdcontrol.imu_at(t - 1ms);
-    tracker.set_enemy_color(gkdcontrol.color_at(t - 1ms));
 
     // recorder.record(img, q, t);
 

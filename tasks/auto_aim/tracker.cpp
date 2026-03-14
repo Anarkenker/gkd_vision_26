@@ -12,7 +12,6 @@ namespace auto_aim
 Tracker::Tracker(const std::string & config_path, Solver & solver)
 : solver_{solver},
   enemy_color_{Color::blue},
-  has_enemy_color_{false},
   detect_count_(0),
   temp_lost_count_(0),
   state_{"lost"},
@@ -21,6 +20,8 @@ Tracker::Tracker(const std::string & config_path, Solver & solver)
   omni_target_priority_{ArmorPriority::fifth}
 {
   auto yaml = YAML::LoadFile(config_path);
+  enemy_color_ =
+    (yaml["enemy_color"].as<std::string>() == "red") ? Color::red : Color::blue;
   min_detect_count_ = yaml["min_detect_count"].as<int>();
   max_temp_lost_count_ = yaml["max_temp_lost_count"].as<int>();
   outpost_max_temp_lost_count_ = yaml["outpost_max_temp_lost_count"].as<int>();
@@ -35,12 +36,6 @@ Tracker::Tracker(const std::string & config_path, Solver & solver)
 
 std::string Tracker::state() const { return state_; }
 
-void Tracker::set_enemy_color(Color enemy_color)
-{
-  enemy_color_ = enemy_color;
-  has_enemy_color_ = true;
-}
-
 std::list<Target> Tracker::track(
   std::list<Armor> & armors, std::chrono::steady_clock::time_point t, bool use_enemy_color)
 {
@@ -52,7 +47,7 @@ std::list<Target> Tracker::track(
     tools::logger()->warn("[Tracker] Large dt: {:.3f}s", dt);
     state_ = "lost";
   }
-  if (use_enemy_color && has_enemy_color_) {
+  if (use_enemy_color) {
     armors.remove_if([&](const auto_aim::Armor & a) { return a.color != enemy_color_; });
   }
 
@@ -126,6 +121,9 @@ std::tuple<omniperception::DetectionResult, std::list<Target>> Tracker::track(
   if (state_ != "lost" && dt > 0.1) {
     tools::logger()->warn("[Tracker] Large dt: {:.3f}s", dt);
     state_ = "lost";
+  }
+  if (use_enemy_color) {
+    armors.remove_if([&](const auto_aim::Armor & a) { return a.color != enemy_color_; });
   }
 
   // 优先选择靠近图像中心的装甲板

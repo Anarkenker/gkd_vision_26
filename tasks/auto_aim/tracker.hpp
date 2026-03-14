@@ -21,7 +21,6 @@ public:
   Tracker(const std::string & config_path, Solver & solver);
 
   std::string state() const;
-  void set_enemy_color(Color enemy_color);
 
   std::list<Target> track(
     std::list<Armor> & armors, std::chrono::steady_clock::time_point t,
@@ -34,7 +33,6 @@ public:
 private:
   Solver & solver_;
   Color enemy_color_;
-  bool has_enemy_color_;
   int min_detect_count_;
   int max_temp_lost_count_;
   int detect_count_;
