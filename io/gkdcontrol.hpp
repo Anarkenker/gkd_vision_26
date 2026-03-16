@@ -46,7 +46,7 @@ public:
   double bullet_speed = 19.5;
   GKDMode mode;
   GKDShootMode shoot_mode;
-  double ft_angle;  //无人机专有
+  double ft_angle;
 
   GKDControl(const std::string & config_path);
 

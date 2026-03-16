@@ -1,0 +1,11 @@
+.devcontainer
+.git
+.github
+.vscode
+build
+Camera
+MvSdkLog
+logs
+records*
+imgs
+testvideos

@@ -115,7 +115,8 @@ void GKDControl::initialize_udp_reception()
       else {
         enemy_color = auto_aim::red;
       }
-      std::cout << current.red << std::endl;
+      // std::cout << current.red << std::endl;
+      
       queue_.push({q.normalized(), std::chrono::steady_clock::now()});
 
       color_queue.push({enemy_color, std::chrono::steady_clock::now()});

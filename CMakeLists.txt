@@ -5,6 +5,7 @@ project(sp_vision LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
@@ -21,11 +22,23 @@ find_package(spdlog REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(nlohmann_json REQUIRED)
 if(NOT OpenVINO_DIR)
-  set(
-    OpenVINO_DIR
-    "/opt/intel/openvino_2024.6.0/runtime/cmake/"
-    CACHE PATH "Path to the OpenVINO CMake package"
+  foreach(
+    _sp_vision_openvino_dir
+    IN ITEMS
+    "$ENV{OpenVINO_DIR}"
+    "$ENV{OPENVINO_DIR}"
+    "/opt/intel/openvino_2024.6.0/runtime/cmake"
+    "/opt/intel/openvino/runtime/cmake"
   )
+    if(_sp_vision_openvino_dir AND EXISTS "${_sp_vision_openvino_dir}")
+      set(
+        OpenVINO_DIR
+        "${_sp_vision_openvino_dir}"
+        CACHE PATH "Path to the OpenVINO CMake package" FORCE
+      )
+      break()
+    endif()
+  endforeach()
 endif()
 find_package(OpenVINO REQUIRED)
 
