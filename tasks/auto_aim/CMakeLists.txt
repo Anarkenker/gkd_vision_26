@@ -1,11 +1,23 @@
 cmake_minimum_required(VERSION 3.16)
 
 if(NOT OpenVINO_DIR)
-    set(
-        OpenVINO_DIR
+    foreach(
+        _sp_vision_openvino_dir
+        IN ITEMS
+        "$ENV{OpenVINO_DIR}"
+        "$ENV{OPENVINO_DIR}"
         "/opt/intel/openvino_2024.6.0/runtime/cmake"
-        CACHE PATH "Path to the OpenVINO CMake package"
+        "/opt/intel/openvino/runtime/cmake"
     )
+        if(_sp_vision_openvino_dir AND EXISTS "${_sp_vision_openvino_dir}")
+            set(
+                OpenVINO_DIR
+                "${_sp_vision_openvino_dir}"
+                CACHE PATH "Path to the OpenVINO CMake package" FORCE
+            )
+            break()
+        endif()
+    endforeach()
 endif()
 
 find_package(OpenVINO REQUIRED COMPONENTS Runtime)

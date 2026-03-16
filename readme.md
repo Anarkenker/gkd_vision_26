@@ -37,13 +37,16 @@
 - `assets/yolo11_buff_int8.bin`
 - `assets/tiny_resnet.onnx`
 
-OpenVINO 路径当前在顶层 `CMakeLists.txt` 中写死为：
+OpenVINO 路径会优先按下面顺序查找：
 
 ```cmake
-set(OpenVINO_DIR "/opt/intel/openvino_2024.6.0/runtime/cmake/")
+$ENV{OpenVINO_DIR}
+$ENV{OPENVINO_DIR}
+/opt/intel/openvino_2024.6.0/runtime/cmake
+/opt/intel/openvino/runtime/cmake
 ```
 
-如果开发机安装路径不同，需要先改这里或在本地环境中覆盖。
+如果开发机安装路径不同，优先通过环境变量覆盖。
 
 ### 2. 运行 CMake
 
@@ -51,6 +54,75 @@ set(OpenVINO_DIR "/opt/intel/openvino_2024.6.0/runtime/cmake/")
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
 ```
+
+## 开发环境
+
+仓库现在提供了一套面向 `Linux x86_64 Intel NUC` 的开发配置，包含：
+
+- `CMakePresets.json`：统一 `cmake` / `clangd` 使用的构建目录和编译器
+- `.clangd`：默认读取 `build/dev-debug/compile_commands.json`
+- `Dockerfile.dev` + `docker-compose.yml`：提供和 NUC 对齐的容器开发环境
+- `.devcontainer/devcontainer.json`：VS Code 进入容器后自动启用 `clangd` 与 CMake Presets
+
+### 容器启动
+
+默认容器平台是 `linux/amd64`，和 Intel NUC 一致：
+
+```bash
+docker compose build
+docker compose up -d
+docker compose exec sp-vision-dev bash
+```
+
+容器内推荐直接使用 Preset：
+
+```bash
+cmake --preset dev-debug
+cmake --build --preset dev-debug -j
+```
+
+如果需要发布版：
+
+```bash
+cmake --preset dev-release
+cmake --build --preset dev-release -j
+```
+
+### clangd
+
+`clangd` 默认读取：
+
+```text
+build/dev-debug/compile_commands.json
+```
+
+因此第一次进入容器后，先执行一次：
+
+```bash
+cmake --preset dev-debug
+```
+
+这样补全、跳转、诊断都会和真实编译参数保持一致。
+
+### VS Code Dev Container
+
+如果你用 VS Code，可以直接 `Reopen in Container`。仓库已经预设：
+
+- `clangd`
+- `CMake Tools`
+- 默认 `cmake` configure preset 为 `dev-debug`
+
+容器创建完成后会自动执行一次：
+
+```bash
+cmake --preset dev-debug
+```
+
+### 说明
+
+- 这套开发环境默认面向 `Linux x86_64` 部署目标，而不是 macOS 原生运行。
+- 如果宿主机是 macOS，建议只把它当作 Docker/VS Code 的入口，实际编译、补全、调试都在容器里完成。
+- 相机、串口、USB 透传这类硬件联调，优先在 NUC 或原生 Linux 主机上做。
 
 ## 运行示例
 

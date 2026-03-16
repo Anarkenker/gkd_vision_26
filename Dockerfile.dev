@@ -1,0 +1,36 @@
+ARG OPENVINO_IMAGE=openvino/ubuntu22_dev:2024.6.0
+FROM ${OPENVINO_IMAGE}
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    ca-certificates \
+    ccache \
+    clang \
+    clangd \
+    cmake \
+    gdb \
+    git \
+    libeigen3-dev \
+    libfmt-dev \
+    libopencv-dev \
+    libspdlog-dev \
+    libusb-1.0-0-dev \
+    libyaml-cpp-dev \
+    ninja-build \
+    nlohmann-json3-dev \
+    pkg-config \
+    python3 \
+    python3-pip \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV CC=clang
+ENV CXX=clang++
+ENV CMAKE_GENERATOR=Ninja
+ENV OpenVINO_DIR=/opt/intel/openvino/runtime/cmake
+ENV OPENVINO_DIR=/opt/intel/openvino/runtime/cmake
+
+WORKDIR /workspace/sp_vision_25
+
+CMD ["bash"]

@@ -1,0 +1,31 @@
+{
+  "name": "sp_vision",
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+  "service": "sp-vision-dev",
+  "workspaceFolder": "/workspace/sp_vision_25",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "llvm-vs-code-extensions.vscode-clangd",
+        "ms-vscode.cmake-tools",
+        "twxs.cmake"
+      ],
+      "settings": {
+        "C_Cpp.intelliSenseEngine": "disabled",
+        "clangd.arguments": [
+          "--background-index",
+          "--compile-commands-dir=/workspace/sp_vision_25/build/dev-debug",
+          "--header-insertion=never"
+        ],
+        "cmake.configureOnOpen": true,
+        "cmake.defaultBuildPreset": "dev-debug",
+        "cmake.defaultConfigurePreset": "dev-debug",
+        "cmake.useCMakePresets": "always"
+      }
+    }
+  },
+  "postCreateCommand": "cmake --preset dev-debug"
+}

@@ -4,6 +4,23 @@ find_package(yaml-cpp REQUIRED)
 
 add_subdirectory(serial)
 
+string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" SP_VISION_SYSTEM_PROCESSOR)
+
+function(sp_vision_add_vendor_link_dir target vendor_root)
+  if(SP_VISION_SYSTEM_PROCESSOR MATCHES "^(x86_64|amd64)$")
+    set(_sp_vision_vendor_arch amd64)
+  elseif(SP_VISION_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64)$")
+    set(_sp_vision_vendor_arch arm64)
+  else()
+    message(
+      FATAL_ERROR
+        "Unsupported architecture: ${CMAKE_SYSTEM_PROCESSOR}. Expected x86_64/amd64 or aarch64/arm64."
+    )
+  endif()
+
+  target_link_directories(${target} PUBLIC "${vendor_root}/lib/${_sp_vision_vendor_arch}")
+endfunction()
+
 # 创建目标 io
 add_library(io STATIC 
     hikrobot/hikrobot.cpp    
@@ -20,23 +37,11 @@ add_library(io STATIC
 
 # hikrobot
 target_include_directories(io PUBLIC hikrobot/include)
-if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
-  target_link_directories(io PUBLIC hikrobot/lib/amd64)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
-  target_link_directories(io PUBLIC hikrobot/lib/arm64)
-else()
-  message(FATAL_ERROR "Unsupported architecture: ${CMAKE_HOST_SYSTEM_PROCESSOR}!")
-endif()
+sp_vision_add_vendor_link_dir(io "${CMAKE_CURRENT_SOURCE_DIR}/hikrobot")
 
 # mindvision
 target_include_directories(io PUBLIC mindvision/include)
-if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
-  target_link_directories(io PUBLIC mindvision/lib/amd64)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
-  target_link_directories(io PUBLIC mindvision/lib/arm64)
-else()
-  message(FATAL_ERROR "Unsupported architecture: ${CMAKE_HOST_SYSTEM_PROCESSOR}!")
-endif()
+sp_vision_add_vendor_link_dir(io "${CMAKE_CURRENT_SOURCE_DIR}/mindvision")
 
 target_link_libraries(io MvCameraControl MVSDK usb-1.0 yaml-cpp serial)
 

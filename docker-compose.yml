@@ -1,0 +1,20 @@
+services:
+  sp-vision-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        OPENVINO_IMAGE: ${SP_VISION_OPENVINO_IMAGE:-openvino/ubuntu22_dev:2024.6.0}
+    platform: ${SP_VISION_DOCKER_PLATFORM:-linux/amd64}
+    working_dir: /workspace/sp_vision_25
+    volumes:
+      - .:/workspace/sp_vision_25
+    environment:
+      CC: clang
+      CXX: clang++
+      OpenVINO_DIR: /opt/intel/openvino/runtime/cmake
+      OPENVINO_DIR: /opt/intel/openvino/runtime/cmake
+    init: true
+    stdin_open: true
+    tty: true
+    command: sleep infinity

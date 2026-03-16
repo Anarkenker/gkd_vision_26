@@ -1,7 +1,14 @@
 .vscode/
+.idea/
 .github/
 .clangd/
+.cache/
 build/
+.DS_Store
+.env
+.env.*
+!.env.example
+docker-compose.override.yml
 Camera/
 logs/
 assets/img_with_q/
