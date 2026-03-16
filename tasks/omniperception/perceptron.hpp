@@ -20,7 +20,7 @@ class Perceptron
 public:
   Perceptron(
     io::USBCamera * usbcma1, io::USBCamera * usbcam2, io::USBCamera * usbcam3,
-    io::USBCamera * usbcam4, const std::string & config_path);
+    io::USBCamera * usbcam4, const std::string & config_path, auto_aim::Color & enemy_color);
 
   ~Perceptron();
 

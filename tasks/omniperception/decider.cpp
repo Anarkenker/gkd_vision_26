@@ -10,7 +10,8 @@
 
 namespace omniperception
 {
-Decider::Decider(const std::string & config_path) : detector_(config_path), count_(0)
+Decider::Decider(const std::string & config_path, auto_aim::Color & enemy_color)
+: enemy_color_(enemy_color), detector_(config_path), count_(0)
 {
   auto yaml = YAML::LoadFile(config_path);
   img_width_ = yaml["image_width"].as<double>();
@@ -19,8 +20,6 @@ Decider::Decider(const std::string & config_path) : detector_(config_path), coun
   fov_v_ = yaml["fov_v"].as<double>();
   new_fov_h_ = yaml["new_fov_h"].as<double>();
   new_fov_v_ = yaml["new_fov_v"].as<double>();
-  enemy_color_ =
-    (yaml["enemy_color"].as<std::string>() == "red") ? auto_aim::Color::red : auto_aim::Color::blue;
   mode_ = yaml["mode"].as<double>();
 }
 

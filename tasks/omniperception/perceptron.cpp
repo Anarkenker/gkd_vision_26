@@ -12,8 +12,8 @@ namespace omniperception
 {
 Perceptron::Perceptron(
   io::USBCamera * usbcam1, io::USBCamera * usbcam2, io::USBCamera * usbcam3,
-  io::USBCamera * usbcam4, const std::string & config_path)
-: detection_queue_(10), decider_(config_path), stop_flag_(false)
+  io::USBCamera * usbcam4, const std::string & config_path, auto_aim::Color & enemy_color)
+: detection_queue_(10), decider_(config_path, enemy_color), stop_flag_(false)
 {
   // 初始化 YOLO 模型
   yolo_parallel1_ = std::make_shared<auto_aim::YOLO>(config_path, false);
