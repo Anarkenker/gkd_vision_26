@@ -36,8 +36,6 @@ max_temp_lost_count: 15
 outpost_max_temp_lost_count: 75
 process_v1: 120
 process_v2: 100
-outpost_process_v1: 10
-outpost_process_v2: 0.1
 
 #####-----aimer参数-----#####
 yaw_offset: -1 # degree -2.5
