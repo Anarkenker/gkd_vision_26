@@ -1,5 +1,3 @@
-# enemy_color: "red"
-enemy_color: "blue"
 
 #####-----神经网络参数-----#####
 yolo_name: yolov5
@@ -37,8 +35,6 @@ max_temp_lost_count: 15
 outpost_max_temp_lost_count: 75
 process_v1: 120
 process_v2: 100
-outpost_process_v1: 10
-outpost_process_v2: 0.1
 
 #####-----aimer参数-----#####
 yaw_offset: 0 # degree close 0.5  far 

@@ -9,7 +9,7 @@ namespace auto_aim
 {
 Target::Target(
   const Armor & armor, std::chrono::steady_clock::time_point t, double radius, int armor_num,
-  Eigen::VectorXd P0_dig)
+  Eigen::VectorXd P0_dig, double process_v1, double process_v2)
 : name(armor.name),
   armor_type(armor.type),
   jumped(false),
@@ -19,7 +19,9 @@ Target::Target(
   t_(t),
   is_switch_(false),
   is_converged_(false),
-  switch_count_(0)
+  switch_count_(0),
+  process_v1_(process_v1),
+  process_v2_(process_v2)
 {
   auto r = radius;
   priority = armor.priority;
@@ -49,7 +51,8 @@ Target::Target(
   ekf_ = tools::ExtendedKalmanFilter(x0, P0, x_add);  //初始化滤波器（预测量、预测量协方差）
 }
 
-Target::Target(double x, double vyaw, double radius, double h) : armor_num_(4)
+Target::Target(double x, double vyaw, double radius, double h, double process_v1, double process_v2)
+: armor_num_(4), process_v1_(process_v1), process_v2_(process_v2)
 {
   Eigen::VectorXd x0{{x, 0, 0, 0, 0, 0, 0, vyaw, radius, 0, h}};
   Eigen::VectorXd P0_dig{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
@@ -93,14 +96,8 @@ void Target::predict(double dt)
 
   // Piecewise White Noise Model
   // https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python/blob/master/07-Kalman-Filter-Math.ipynb
-  double v1, v2;
-  if (name == ArmorName::outpost) {
-    v1 = 10;   // 前哨站加速度方差
-    v2 = 0.1;  // 前哨站角加速度方差
-  } else {
-    v1 = 100;  // 加速度方差
-    v2 = 400;  // 角加速度方差
-  }
+  const double v1 = process_v1_;
+  const double v2 = process_v2_;
   auto a = dt * dt * dt * dt / 4;
   auto b = dt * dt * dt / 2;
   auto c = dt * dt;
@@ -127,10 +124,6 @@ void Target::predict(double dt)
     x_prior[6] = tools::limit_rad(x_prior[6]);
     return x_prior;
   };
-
-  // 前哨站转速特判
-  if (this->convergened() && this->name == ArmorName::outpost && std::abs(this->ekf_.x[7]) > 2)
-    this->ekf_.x[7] = this->ekf_.x[7] > 0 ? 2.51 : -2.51;
 
   ekf_.predict(F, Q, f);
 }
