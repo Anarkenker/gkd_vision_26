@@ -31,7 +31,7 @@ max_side_ratio: 1.5
 max_rectangular_error: 25 # degree
 
 #####-----tracker参数-----#####
-min_detect_count: 1
+min_detect_count: 5
 max_temp_lost_count: 15
 outpost_max_temp_lost_count: 75
 process_v1: 120
@@ -50,8 +50,8 @@ low_speed_delay_time: 0.01 # s planner use this value
 #####-----shooter参数-----#####
 bullet_speed: 19.5 # m/s
 first_tolerance: 3 # 近距离射击容差，degree
-second_tolerance: 1 # 远距离射击容差，degree
-judge_distance: 4 #距离判断阈值
+second_tolerance: 2 # 远距离射击容差，degree
+judge_distance: 2 #距离判断阈值
 auto_fire: true # 是否由自瞄控制射击
 
 camera_name: "hikrobot"
@@ -70,7 +70,7 @@ distort_coeffs: [-0.12545568772566174, 0.11705061936054625, -0.00025855083876730
 
 
 R_camera2gimbal: [0, 0, 1, -1, 0, 0, 0, -1, 0]
-t_camera2gimbal: [0.069127325957791413, 0.00000000092767802, 0.0910000880185793]
+t_camera2gimbal: [0.069127325957791413, 0.00000000000000000, 0.0910000880185793]
 
 #####-----手眼测试参数-----#####
 handeye_test:
@@ -80,11 +80,11 @@ handeye_test:
   delay: 0
 
 #####-----planner-----#####
-fire_thresh: 0.0015
+fire_thresh: 0.315
 
-max_yaw_acc: 0.5
-Q_yaw: [1, 1]
-R_yaw: [1e8]
+max_yaw_acc: 50
+Q_yaw: [9e6, 0]
+R_yaw: [1]
 
 max_pitch_acc: 100
 Q_pitch: [9e6, 0]
